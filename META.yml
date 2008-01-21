@@ -1,9 +1,9 @@
 ---
 name: Mail-SpamAssassin-Plugin-Konfidi
-version: 1.0.0
+version: 1.0.1
 author:
   - 'Dave Brondsema <dave@brondsema.net>'
-abstract: A SpamAssassin plugin that uses the Konfidi distributed trust network. Currently only uses OpenPGP signatures for authentication
+abstract: A SpamAssassin plugin that uses the Konfidi distributed trust network for authenticated messages.
 license: unknown
 requires:
   Error: 0
@@ -16,7 +16,7 @@ build_requires:
 provides:
   Mail::SpamAssassin::Plugin::Konfidi:
     file: lib/Mail/SpamAssassin/Plugin/Konfidi.pm
-    version: 1.0.0
+    version: 1.0.1
 generated_by: Module::Build version 0.2808
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html

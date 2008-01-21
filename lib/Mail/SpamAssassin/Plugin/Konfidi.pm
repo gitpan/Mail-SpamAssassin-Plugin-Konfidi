@@ -16,15 +16,15 @@ package Mail::SpamAssassin::Plugin::Konfidi;
 
 =head1 NAME
 
-Mail::SpamAssassin::Plugin::Konfidi - A SpamAssassin plugin that uses the Konfidi distributed trust network. Currently only uses OpenPGP signatures for authentication
+Mail::SpamAssassin::Plugin::Konfidi - A SpamAssassin plugin that uses the Konfidi distributed trust network for authenticated messages.
 
 =head1 VERSION
 
-Version 1.0.0
+Version 1.0.1
 
 =cut
 
-our $VERSION = '1.0.0';
+our $VERSION = '1.0.1';
 
 =head1 SYNOPSIS
 
@@ -36,24 +36,31 @@ Tell SpamAssassin to use it by putting the following (from this module's F<etc/i
 
  loadplugin Mail::SpamAssassin::Plugin::Konfidi
 
-Configure the plugin by putting the following (from this module's F<etc/70_konfidi.cf>) in a configuration file (see L<http://wiki.apache.org/spamassassin/WhereDoLocalSettingsGo>)
+Configure the plugin by putting the following (from this module's F<etc/61_konfidi.cf>) in a configuration file (see L<http://wiki.apache.org/spamassassin/WhereDoLocalSettingsGo>)
 
  ifplugin Mail::SpamAssassin::Plugin::Konfidi
  
+ full    KONFIDI_TRUST_VALUE     eval:check_konfidi()
+ describe KONFIDI_TRUST_VALUE     Konfidi-computed trust value for sender, if sender is authenticated
+ 
+ endif   # Mail::SpamAssassin::Plugin::Konfidi
+
+Set settings for yourself:
+
  konfidi_service_url http://test-server.konfidi.org/
  konfidi_my_pgp_fingerprint 1234DEADBEEF5678... # this should be your full 40-digit fingerprint
  
  konfidi_rating0_becomes_score 0
  konfidi_rating1_becomes_score -20
- 
- endif   # Mail::SpamAssassin::Plugin::Konfidi
 
 The rating-becomes-score settings define a linear scale, so using the above example, a Konfidi rating of 0.75 would generate a SpamAssassin score of -15.  You do not set any regular 'score' rules since the scores are assigned dynamically based on these settings.
 
 =head1 DESCRIPTION
 
-This requires L<Mail::SpamAssassin::Plugin::OpenPGP>.  Future versions will also support L<Mail::SpamAssassin::Plugin::SPF> and
+This plugin currently only uses OpenPGP signatures for authentication and requires L<Mail::SpamAssassin::Plugin::OpenPGP>.  Future versions will also support L<Mail::SpamAssassin::Plugin::SPF> and
 L<Mail::SpamAssassin::Plugin::DKIM> for authentication.
+
+The loadplugin statement for OpenPGP must occur before the loadplugin statement for Konfidi.  This can be done by putting them in order in one file, or naming your configuration files in order like 26_openpgp.cf and 61_konfidi.cf
 
 For project information, see L<http://konfidi.org>
 
